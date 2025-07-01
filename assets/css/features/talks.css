@@ -1,0 +1,252 @@
+.talks-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.talk-month-group {
+    margin-bottom: 40px;
+}
+
+.talk-month {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+}
+
+/* Torn paper effect for talk posts */
+.talk-post {
+    background: var(--entry);
+    padding: 20px;
+    margin-bottom: 40px; /* Increased for better spacing with rotation */
+    position: relative;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    overflow: visible;
+    
+    /* Basic shape with slightly irregular edges */
+    border-radius: 2px;
+    clip-path: polygon(
+        0% 0%, 
+        100% 0%, 
+        99.5% 30%, 
+        100% 70%, 
+        98% 100%, 
+        70% 99%, 
+        30% 100%, 
+        0% 98%
+    );
+    
+    /* Tape effect on top */
+    --tape-width: 80px;
+    --tape-height: 25px;
+    --tape-color: rgba(255, 245, 220, 0.8);
+}
+
+/* Paper texture overlay using a pseudo-element */
+.talk-post::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.1 0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' fill='none'/%3E%3C/svg%3E");
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Add tape effect to the top using a custom element */
+.talk-post .tape-top {
+    content: "";
+    position: absolute;
+    width: var(--tape-width);
+    height: var(--tape-height);
+    background-color: var(--tape-color);
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%) rotate(2deg);
+    opacity: 0.8;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+/* Create torn edge effect */
+.talk-post::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    right: 0;
+    height: 10px;
+    background-image: 
+        linear-gradient(45deg, transparent 33.333%, var(--entry) 33.333%, var(--entry) 66.667%, transparent 66.667%),
+        linear-gradient(-45deg, transparent 33.333%, var(--entry) 33.333%, var(--entry) 66.667%, transparent 66.667%);
+    background-size: 20px 20px;
+    background-position: 0 -10px;
+}
+
+/* Random rotation for each post */
+.talk-post:nth-child(odd) {
+    transform: rotate(-1deg);
+}
+
+.talk-post:nth-child(even) {
+    transform: rotate(1deg);
+}
+
+.talk-post:nth-child(3n) {
+    transform: rotate(0.5deg);
+}
+
+.talk-post:nth-child(5n) {
+    transform: rotate(-0.5deg);
+}
+
+/* Add different tape positions and styles */
+.talk-post:nth-child(odd) .tape-top {
+    left: 30%;
+    transform: translateX(-50%) rotate(-5deg);
+    background-color: rgba(255, 240, 200, 0.8);
+}
+
+.talk-post:nth-child(even) .tape-top {
+    left: 70%;
+    transform: translateX(-50%) rotate(5deg);
+    background-color: rgba(240, 240, 255, 0.8);
+}
+
+.talk-post:nth-child(3n) .tape-top {
+    width: 60px;
+    height: 20px;
+    background-color: rgba(255, 230, 230, 0.8);
+}
+
+/* Add second tape for some notes */
+.talk-post .tape-bottom {
+    position: absolute;
+    width: 50px;
+    height: 20px;
+    background-color: rgba(230, 255, 230, 0.8);
+    bottom: 10px;
+    right: 20px;
+    transform: rotate(-3deg);
+    opacity: 0.8;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    display: none;
+}
+
+.talk-post:nth-child(4n) .tape-bottom {
+    display: block;
+}
+
+/* Tape texture effect */
+.talk-post .tape-top::after,
+.talk-post .tape-bottom::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' fill='none'/%3E%3C/svg%3E");
+    opacity: 0.3;
+}
+
+/* Hover effect */
+.talk-post {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.talk-post:hover {
+    transform: translateY(-2px) rotate(var(--rotate, 0deg)) !important;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.talk-post:nth-child(odd):hover {
+    --rotate: -1deg;
+}
+
+.talk-post:nth-child(even):hover {
+    --rotate: 1deg;
+}
+
+.talk-header {
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 2;
+}
+
+.talk-meta {
+    font-size: 0.9em;
+    color: var(--secondary);
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.talk-meta time {
+    font-weight: 500;
+}
+
+.talk-location,
+.talk-weather,
+.talk-mood {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.talk-content {
+    line-height: 1.6;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 2;
+}
+
+.talk-content p:last-child {
+    margin-bottom: 0;
+}
+
+.talk-footer {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 2;
+}
+
+.talk-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.talk-tag {
+    color: var(--secondary);
+    font-size: 0.9em;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.talk-tag:hover {
+    color: var(--primary);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .talks-container {
+        padding: 10px;
+    }
+
+    .talk-post {
+        padding: 15px;
+    }
+
+    .talk-meta {
+        flex-direction: column;
+        gap: 8px;
+    }
+} 

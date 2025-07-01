@@ -1,0 +1,91 @@
+<!-- KaTeX -->
+{{ if or .Params.math .Site.Params.math.enable }}
+{{ $katexCSS := resources.Get "js/libs/katex/katex.min.css" | resources.Fingerprint }}
+<link rel="stylesheet" href="{{ $katexCSS.RelPermalink }}">
+
+{{ $katexJS := resources.Get "js/libs/katex/katex.min.js" | resources.Fingerprint }}
+<script defer src="{{ $katexJS.RelPermalink }}"></script>
+
+{{ $autoRenderJS := resources.Get "js/libs/katex/auto-render.min.js" | resources.Fingerprint }}
+<script defer src="{{ $autoRenderJS.RelPermalink }}"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false}
+            ],
+            throwOnError : false
+        });
+    });
+</script>
+{{ end }}
+
+<!-- 主题切换样式 -->
+{{ $themeToggleCSS := resources.Get "css/features/theme-toggle.css" | resources.Fingerprint }}
+<link rel="stylesheet" href="{{ $themeToggleCSS.RelPermalink }}">
+
+<!-- Mermaid -->
+{{ if or .Params.diagram .Site.Params.diagram.enable }}
+{{ $mermaidJS := resources.Get "js/libs/mermaid/mermaid.min.js" | resources.Fingerprint }}
+<script defer src="{{ $mermaidJS.RelPermalink }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: document.body.getAttribute('theme') === 'dark' ? 'dark' : 'default'
+        });
+        
+        document.querySelectorAll('pre code.language-mermaid').forEach(function(element) {
+            let pre = element.parentElement;
+            pre.classList.add('mermaid');
+            pre.innerHTML = element.innerHTML;
+        });
+    });
+</script>
+{{ end }}
+
+<!-- Dark mode 样式增强 -->
+<style>
+/* 全局过渡效果 */
+* {
+    transition: var(--theme-transition);
+}
+
+[theme="dark"] .post-content {
+    color: var(--gh-text);
+}
+
+[theme="dark"] .project-card {
+    background: var(--gh-bg);
+    border-color: var(--gh-border-color);
+}
+
+[theme="dark"] .project-card h3 a {
+    color: var(--gh-link);
+}
+
+[theme="dark"] .activity-icon {
+    background: var(--gh-bg);
+    border-color: var(--gh-border-color);
+}
+
+[theme="dark"] .stats-section {
+    border-color: var(--gh-border-color);
+}
+
+/* 暗色模式滚动条样式 */
+[theme="dark"] ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+[theme="dark"] ::-webkit-scrollbar-thumb {
+    background: #484f58;
+    border-radius: 10px;
+}
+</style>
+
+<!-- 自定义图标 -->
+<link rel="icon" href="{{ .Site.Params.favicon }}" type="image/svg+xml">

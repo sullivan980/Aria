@@ -1,0 +1,63 @@
+:root {
+    --gap: 24px;
+    --content-gap: 20px;
+    --nav-width: 1024px;
+    --main-width: 720px;
+    --header-height: 60px;
+    --footer-height: 60px;
+    --radius: 8px;
+    --theme: rgb(255, 255, 255);
+    --entry: rgb(255, 255, 255);
+    --primary: rgb(30, 30, 30);
+    --secondary: rgb(108, 108, 108);
+    --tertiary: rgb(214, 214, 214);
+    --content: rgb(31, 31, 31);
+    --code-block-bg: rgb(28, 29, 33);
+    --code-bg: rgb(245, 245, 245);
+    --border: rgb(238, 238, 238);
+    
+    /* GitHub风格颜色 */
+    --gh-border-color: #e1e4e8;
+    --gh-bg: #ffffff;
+    --gh-text: #24292e;
+    --gh-link: #0366d6;
+    
+    /* RGB颜色值，用于透明度调整 */
+    --primary-rgb: 30, 30, 30;
+    --secondary-rgb: 108, 108, 108;
+    --tertiary-rgb: 214, 214, 214;
+    
+    /* 过渡效果 */
+    --theme-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+}
+
+.dark {
+    --theme: rgb(29, 30, 32);
+    --entry: rgb(46, 46, 51);
+    --primary: rgb(218, 218, 219);
+    --secondary: rgb(155, 156, 157);
+    --tertiary: rgb(65, 66, 68);
+    --content: rgb(196, 196, 197);
+    --code-block-bg: rgb(46, 46, 51);
+    --code-bg: rgb(55, 56, 62);
+    --border: rgb(51, 51, 51);
+    
+    /* GitHub深色模式颜色 */
+    --gh-border-color: #30363d;
+    --gh-bg: #0d1117;
+    --gh-text: #c9d1d9;
+    --gh-link: #58a6ff;
+    
+    /* 深色模式下的RGB颜色值 */
+    --primary-rgb: 218, 218, 219;
+    --secondary-rgb: 155, 156, 157;
+    --tertiary-rgb: 65, 66, 68;
+}
+
+.list {
+    background: var(--code-bg);
+}
+
+.dark.list {
+    background: var(--theme);
+}
