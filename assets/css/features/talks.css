@@ -6,6 +6,7 @@
 
 .talk-month-group {
     margin-bottom: 40px;
+    position: relative;
 }
 
 .talk-month {
@@ -15,164 +16,196 @@
     border-bottom: 2px solid var(--border);
 }
 
-/* Torn paper effect for talk posts */
+/* 纸张撕裂效果样式 - 统一浅色深色模式 */
 .talk-post {
-    background: var(--entry);
-    padding: 20px;
-    margin-bottom: 40px; /* Increased for better spacing with rotation */
+    /* 黄色纸张基础样式 */
+    background-color: #f1ea95; /* 固定黄色背景 */
+    color: #222; /* 固定黑色文字 */
+    padding: 25px;
+    margin-bottom: 50px;
+    margin-top: 20px; /* 为胶带留出空间 */
     position: relative;
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-    overflow: visible;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    overflow: visible !important; /* 确保胶带可以溢出显示 */
+    transform-style: preserve-3d;
+    z-index: 1;
     
-    /* Basic shape with slightly irregular edges */
-    border-radius: 2px;
+    /* 四周不规则撕裂边缘效果 */
+    --tear-size: 10px;
+    --tear-offset: 5px;
+    
+    /* 使用clip-path创建不规则边缘 */
     clip-path: polygon(
-        0% 0%, 
-        100% 0%, 
-        99.5% 30%, 
-        100% 70%, 
-        98% 100%, 
-        70% 99%, 
-        30% 100%, 
-        0% 98%
+        /* 左上角 */
+        0% var(--tear-offset),
+        var(--tear-size) 0%,
+        /* 右上角 */
+        calc(100% - var(--tear-size)) 0%,
+        100% var(--tear-offset),
+        /* 右边多个点 */
+        calc(100% - var(--tear-offset)) calc(20% - var(--tear-size)),
+        100% 20%,
+        calc(100% - var(--tear-offset)) calc(40% - var(--tear-size)),
+        100% 40%,
+        calc(100% - var(--tear-offset)) calc(60% - var(--tear-size)),
+        100% 60%,
+        calc(100% - var(--tear-offset)) calc(80% - var(--tear-size)),
+        100% 80%,
+        /* 右下角 */
+        calc(100% - var(--tear-size)) 100%,
+        calc(80% + var(--tear-offset)) calc(100% - var(--tear-size)),
+        /* 底部多个点 */
+        80% 100%,
+        60% calc(100% - var(--tear-offset)),
+        60% 100%,
+        40% calc(100% - var(--tear-offset)),
+        40% 100%,
+        20% calc(100% - var(--tear-offset)),
+        /* 左下角 */
+        20% 100%,
+        var(--tear-size) calc(100% - var(--tear-offset)),
+        0% calc(100% - var(--tear-size)),
+        /* 左边多个点 */
+        var(--tear-offset) 80%,
+        0% calc(80% - var(--tear-size)),
+        var(--tear-offset) 60%,
+        0% calc(60% - var(--tear-size)),
+        var(--tear-offset) 40%,
+        0% calc(40% - var(--tear-size)),
+        var(--tear-offset) 20%,
+        0% calc(20% - var(--tear-size))
     );
     
-    /* Tape effect on top */
-    --tape-width: 80px;
-    --tape-height: 25px;
-    --tape-color: rgba(255, 245, 220, 0.8);
+    /* 旋转效果 */
+    transform: rotate(var(--rotate, 0deg));
 }
 
-/* Paper texture overlay using a pseudo-element */
-.talk-post::before {
+/* 为偶数和奇数项添加不同的旋转角度 */
+.talk-post:nth-child(odd) {
+    --rotate: -1deg;
+}
+
+.talk-post:nth-child(even) {
+    --rotate: 1deg;
+}
+
+.talk-post:nth-child(3n) {
+    --rotate: -0.5deg;
+}
+
+.talk-post:nth-child(5n) {
+    --rotate: 0.5deg;
+}
+
+/* 纸张网格背景 - 使用after伪元素避免冲突 */
+.talk-post::after {
     content: "";
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.1 0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' fill='none'/%3E%3C/svg%3E");
-    opacity: 0.05;
     pointer-events: none;
-    z-index: 0;
+    z-index: 1;
+    
+    /* 创建网格效果 */
+    background-image:
+        /* 横线 */
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 24px,
+            rgba(0, 0, 0, 0.05) 24px,
+            rgba(0, 0, 0, 0.05) 25px
+        ),
+        /* 竖线 */
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 24px,
+            rgba(0, 0, 0, 0.025) 24px,
+            rgba(0, 0, 0, 0.025) 25px
+        ),
+        /* 纸张纹理 */
+        url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' fill='none'/%3E%3C/svg%3E");
 }
 
-/* Add tape effect to the top using a custom element */
-.talk-post .tape-top {
+/* 胶带效果 - 使用before伪元素 */
+.talk-post::before {
     content: "";
     position: absolute;
-    width: var(--tape-width);
-    height: var(--tape-height);
-    background-color: var(--tape-color);
-    top: -12px;
+    width: 140px; /* 加宽胶带 */
+    height: 40px; /* 增加高度 */
+    background-color: rgba(255, 240, 200, 0.9);
+    top: -20px; /* 向上移动更多 */
     left: 50%;
     transform: translateX(-50%) rotate(2deg);
-    opacity: 0.8;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-    z-index: 1;
-}
-
-/* Create torn edge effect */
-.talk-post::after {
-    content: "";
-    position: absolute;
-    bottom: -10px;
-    left: 0;
-    right: 0;
-    height: 10px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+    /* 胶带纹理 */
     background-image: 
-        linear-gradient(45deg, transparent 33.333%, var(--entry) 33.333%, var(--entry) 66.667%, transparent 66.667%),
-        linear-gradient(-45deg, transparent 33.333%, var(--entry) 33.333%, var(--entry) 66.667%, transparent 66.667%);
-    background-size: 20px 20px;
-    background-position: 0 -10px;
+        repeating-linear-gradient(
+            90deg, 
+            rgba(160, 140, 0, 0.06), 
+            rgba(160, 140, 0, 0.06) 2px, 
+            transparent 2px, 
+            transparent 6px
+        );
+    /* 解决在某些浏览器中的clip-path问题 */
+    clip-path: none;
+    -webkit-clip-path: none;
 }
 
-/* Random rotation for each post */
-.talk-post:nth-child(odd) {
-    transform: rotate(-1deg);
-}
-
-.talk-post:nth-child(even) {
-    transform: rotate(1deg);
-}
-
-.talk-post:nth-child(3n) {
-    transform: rotate(0.5deg);
-}
-
-.talk-post:nth-child(5n) {
-    transform: rotate(-0.5deg);
-}
-
-/* Add different tape positions and styles */
-.talk-post:nth-child(odd) .tape-top {
+/* 随机化胶带位置和样式 */
+.talk-post:nth-child(odd)::before {
     left: 30%;
+    width: 140px; /* 加宽胶带 */
     transform: translateX(-50%) rotate(-5deg);
-    background-color: rgba(255, 240, 200, 0.8);
+    background-color: rgba(255, 235, 180, 0.9);
 }
 
-.talk-post:nth-child(even) .tape-top {
+.talk-post:nth-child(even)::before {
     left: 70%;
+    width: 140px; /* 加宽胶带 */
     transform: translateX(-50%) rotate(5deg);
-    background-color: rgba(240, 240, 255, 0.8);
+    background-color: rgba(255, 245, 210, 0.9);
 }
 
-.talk-post:nth-child(3n) .tape-top {
-    width: 60px;
-    height: 20px;
-    background-color: rgba(255, 230, 230, 0.8);
+.talk-post:nth-child(3n)::before {
+    width: 120px; /* 加宽胶带 */
+    height: 35px;
+    background-color: rgba(255, 230, 170, 0.9);
 }
 
-/* Add second tape for some notes */
+/* 随机底部胶带 */
 .talk-post .tape-bottom {
     position: absolute;
     width: 50px;
     height: 20px;
-    background-color: rgba(230, 255, 230, 0.8);
+    background-color: rgba(255, 240, 200, 0.8);
     bottom: 10px;
     right: 20px;
     transform: rotate(-3deg);
-    opacity: 0.8;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-    z-index: 1;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    z-index: 2;
     display: none;
+    
+    /* 胶带纹理 */
+    background-image: 
+        repeating-linear-gradient(
+            90deg, 
+            rgba(160, 140, 0, 0.06), 
+            rgba(160, 140, 0, 0.06) 2px, 
+            transparent 2px, 
+            transparent 6px
+        );
 }
 
 .talk-post:nth-child(4n) .tape-bottom {
     display: block;
 }
 
-/* Tape texture effect */
-.talk-post .tape-top::after,
-.talk-post .tape-bottom::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.2 0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' fill='none'/%3E%3C/svg%3E");
-    opacity: 0.3;
-}
-
-/* Hover effect */
-.talk-post {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.talk-post:hover {
-    transform: translateY(-2px) rotate(var(--rotate, 0deg)) !important;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 3px 6px rgba(0, 0, 0, 0.1);
-}
-
-.talk-post:nth-child(odd):hover {
-    --rotate: -1deg;
-}
-
-.talk-post:nth-child(even):hover {
-    --rotate: 1deg;
-}
-
+/* 内容部分样式 */
 .talk-header {
     margin-bottom: 15px;
     position: relative;
@@ -181,7 +214,7 @@
 
 .talk-meta {
     font-size: 0.9em;
-    color: var(--secondary);
+    color: #5a4c00;
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
@@ -213,7 +246,7 @@
 .talk-footer {
     margin-top: 15px;
     padding-top: 15px;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid rgba(150, 120, 0, 0.15);
     position: relative;
     z-index: 2;
 }
@@ -225,14 +258,24 @@
 }
 
 .talk-tag {
-    color: var(--secondary);
+    color: #5a4c00;
     font-size: 0.9em;
     text-decoration: none;
     transition: color 0.2s;
 }
 
 .talk-tag:hover {
-    color: var(--primary);
+    color: #7e6b00;
+}
+
+/* 悬停效果 */
+.talk-post {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.talk-post:hover {
+    transform: translateY(-5px) rotate(var(--rotate, 0deg));
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
 }
 
 /* 响应式设计 */
@@ -240,13 +283,20 @@
     .talks-container {
         padding: 10px;
     }
-
+    
     .talk-post {
-        padding: 15px;
+        padding: 20px;
+        margin-bottom: 40px;
     }
-
+    
     .talk-meta {
         flex-direction: column;
         gap: 8px;
     }
+}
+
+/* 确保胶带显示在纸张上方 */
+.talk-post {
+    position: relative;
+    overflow: visible !important; /* 确保溢出内容可见 */
 } 
