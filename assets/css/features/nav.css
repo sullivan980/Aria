@@ -363,6 +363,7 @@
         max-width: 220px;
         padding: 12px 20px;
         font-size: 1.1em;
+        font-weight: 600;
         background: rgba(var(--entry-rgb), 0.4);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
