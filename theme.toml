@@ -15,7 +15,7 @@ demosite = "https://sullivan980.github.io/"
 tags = ["blog", "responsive", "clean", "elegant", "modern", "dark mode", "portfolio"]
 features = ["responsive", "single column", "blog", "clean", "gallery", "dark mode"]
 
-min_version = "0.147.4"
+min_version = "0.146.0"
 
 [author]
   name = "Sullivan"
