@@ -65,6 +65,13 @@
     filter: brightness(0) invert(1);
 }
 
+/* 自定义过渡曲线 */
+:root {
+    --ease-spring: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
 /* 主题切换按钮 */
 .theme-toggle {
     padding: 4px;
@@ -91,31 +98,6 @@
 
 .theme-toggle:hover svg {
     transform: scale(1.1);
-}
-
-/* 响应式显示控制 */
-@media screen and (min-width: 769px) {
-    .nav {
-        padding: 0 var(--gap);
-    }
-    
-    .desktop-only {
-        display: flex;
-    }
-    
-    .mobile-only {
-        display: none;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .desktop-only {
-        display: none;
-    }
-    
-    .mobile-only {
-        display: flex;
-    }
 }
 
 /* 菜单触发器 */
@@ -150,13 +132,6 @@
     border-radius: 4px;
     transition: transform 0.3s var(--ease-spring),
                 opacity 0.2s ease;
-}
-
-/* 自定义过渡曲线 */
-:root {
-    --ease-spring: cubic-bezier(0.68, -0.6, 0.32, 1.6);
-    --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6);
-    --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 /* 菜单触发器动画 */
@@ -214,6 +189,21 @@
     display: none;
 }
 
+/* 响应式显示控制 */
+@media screen and (min-width: 769px) {
+    .nav {
+        padding: 0 var(--gap);
+    }
+    
+    .desktop-only {
+        display: flex;
+    }
+    
+    .mobile-only {
+        display: none;
+    }
+}
+
 /* 移动端样式 */
 @media screen and (max-width: 768px) {
     .desktop-only {
@@ -229,30 +219,63 @@
         display: none;
     }
     
+    /* 移动端导航菜单 - 修复闪烁问题 */
     .nav-menu-mobile {
-        display: block;
+        display: flex;
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100vh;
-        background: rgba(var(--entry-rgb), 0.55);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
-        visibility: hidden;
-        opacity: 0;
-        transition: visibility 0.3s ease,
-                    opacity 0.3s ease;
         z-index: 98;
-        display: flex;
         justify-content: center;
         align-items: center;
-        overflow: hidden; /* 禁止容器滚动 */
+        overflow: hidden;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0.3s ease, opacity 0.3s ease;
+        will-change: opacity, visibility;
+        background-color: var(--theme);
     }
-
+    
+    .nav-menu-mobile::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(var(--entry-rgb), 0.55);
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        will-change: opacity;
+    }
+    
     .nav-menu-mobile.active {
         visibility: visible;
         opacity: 1;
+    }
+    
+    .nav-menu-mobile.active::before {
+        opacity: 1;
+    }
+    
+    /* 在iOS设备上使用不同的背景样式 */
+    @supports (-webkit-touch-callout: none) {
+        .nav-menu-mobile::before {
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            background: rgba(var(--entry-rgb), 0.85);
+        }
+    }
+    
+    /* 在支持backdrop-filter的设备上使用它 */
+    @supports (backdrop-filter: blur(25px)) {
+        .nav-menu-mobile::before {
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+        }
     }
 
     .menu-trigger {
@@ -365,8 +388,6 @@
         font-size: 1.1em;
         font-weight: 600;
         background: rgba(var(--entry-rgb), 0.4);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
         border: 1px solid rgba(var(--border-rgb), 0.1);
         border-radius: 12px;
         transition: all 0.2s ease;
